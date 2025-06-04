@@ -1,4 +1,3 @@
-
 class ValidationError extends Error {
   constructor(message) {
     super(message);
@@ -14,11 +13,10 @@ document.querySelector('form').addEventListener('submit', (e) => {
   document.querySelector('output').innerHTML = eval(`${f} ${op} ${s}`);
 });
 
-window.onerror = function(message, source, lineno, colno, errorObj) {
+window.onerror = function (message, source, lineno, colno, errorObj) {
   console.log('Caught global error:', message);
   if (window.TrackJS && typeof TrackJS.track === 'function') {
     TrackJS.track({ message, file: source, line: lineno, column: colno, error: errorObj });
-    console.log('▶ forwarded error to TrackJS');
   }
   return true;
 };
@@ -55,7 +53,8 @@ document.querySelector('#console-warn').addEventListener('click', () => {
   console.warn('Console warn clicked');
 });
 document.querySelector('#console-assert').addEventListener('click', () => {
-  const x = 2, y = 3;
+  const x = 2,
+        y = 3;
   console.assert(x === y, 'Assertion failed');
 });
 document.querySelector('#console-clear').addEventListener('click', () => {
@@ -76,7 +75,10 @@ document.querySelector('#console-group-end').addEventListener('click', () => {
   console.groupEnd();
 });
 document.querySelector('#console-table').addEventListener('click', () => {
-  console.table([]);
+  console.table([
+    { id: 1, name: 'a', role: 'x' },
+    { id: 2, name: 'b', role: 'y' },
+  ]);
 });
 document.querySelector('#start-timer').addEventListener('click', () => {
   console.time('timer');
@@ -86,20 +88,14 @@ document.querySelector('#end-timer').addEventListener('click', () => {
   console.timeEnd('timer');
 });
 document.querySelector('#console-trace').addEventListener('click', () => {
-  function a() { function b() { console.trace('Trace'); } b(); }
+  function a() {
+    function b() {
+      console.trace('Trace');
+    }
+    b();
+  }
   a();
 });
 document.querySelector('#trigger-global-error').addEventListener('click', () => {
   console.log(document.querySelector('#does-not-exist').value);
 });
-
-console.log('▶ end of main script');
-
-// TrackJS verification
-console.log('▶ TrackJS present?', typeof TrackJS);
-if (window.TrackJS && typeof TrackJS.track === 'function') {
-  TrackJS.track('Manual TrackJS test');
-  console.log('▶ Called TrackJS.track()');
-} else {
-  console.log('⛔ TrackJS did not load');
-}
