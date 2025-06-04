@@ -1,26 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lab 9</title>
-
   <style>
     button {
       margin: 3px;
     }
-
     button:hover {
       cursor: pointer;
     }
-
     #first-num,
     #second-num {
       width: 60px;
     }
-
     output {
       border: 1px solid gray;
       display: block;
@@ -29,39 +23,35 @@
       padding: 5px;
       width: 240px;
     }
-
     main {
       width: 800px;
     }
-
     #error-btns {
-      column-gap: 5px;
       display: flex;
       flex-wrap: wrap;
-      margin-top: 30px;
+      column-gap: 5px;
       row-gap: 5px;
+      margin-top: 30px;
     }
-
-    #error-btns>* {
+    #error-btns > * {
       padding: 8px 2px;
       width: 122px;
     }
   </style>
 </head>
-
 <body>
   <main>
     <form>
       <fieldset>
         <legend>Error Calculator</legend>
-        <input name="first-num" id="first-num" />
-        <select name="operator" id="operator">
+        <input id="first-num" />
+        <select id="operator">
           <option>+</option>
           <option>-</option>
           <option>*</option>
           <option>/</option>
         </select>
-        <input name="second-num" id="second-num" />
+        <input id="second-num" />
         <button id="calculate">Calculate</button>
         <br />
         <output></output>
@@ -69,174 +59,27 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button id="console-log">Console Log</button>
+      <button id="console-error">Console Error</button>
+      <button id="console-count">Console Count</button>
+      <button id="console-warn">Console Warn</button>
+      <button id="console-assert">Console Assert</button>
+      <button id="console-clear">Console Clear</button>
+      <button id="console-dir">Console Dir</button>
+      <button id="console-dirxml">Console dirxml</button>
+      <button id="console-group-start">Console Group Start</button>
+      <button id="console-group-end">Console Group End</button>
+      <button id="console-table">Console Table</button>
+      <button id="start-timer">Start Timer</button>
+      <button id="end-timer">End Timer</button>
+      <button id="console-trace">Console Trace</button>
+      <button id="throw-custom-error">Throw Custom Error</button>
+      <button id="trigger-global-error">Trigger a Global Error</button>
     </section>
   </main>
 
-  <script>
-    class ValidationError extends Error {
-    constructor(message) {
-      super(message);
-      this.name = 'ValidationError';
-    }
-  }
-
-  let form = document.querySelector('form');
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    let output = document.querySelector('output');
-    let firstNum = document.querySelector('#first-num').value;
-    let secondNum = document.querySelector('#second-num').value;
-    let operator = document.querySelector('#operator').value;
-    output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
-  });
-
-  let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
-
-  window.onerror = function(message, source, lineno, colno, errorObj) {
-    console.log('Caught global error:', message);
-
-    if (window.trackJs && typeof trackJs.track === 'function') {
-      trackJs.track({
-        message: message,
-        file: source,
-        line: lineno,
-        column: colno,
-        error: errorObj
-      });
-    }
-    return true; 
-  };
-
-  const [
-    consoleLogBtn, 
-    consoleErrorBtn, 
-    consoleCountBtn, 
-    consoleWarnBtn, 
-    consoleAssertBtn,
-    consoleClearBtn,
-    consoleDirBtn, 
-    consoleDirxmlBtn,
-    consoleGroupStartBtn, 
-    consoleGroupEndBtn,
-    consoleTableBtn, 
-    startTimerBtn,
-    endTimerBtn,
-    consoleTraceBtn, 
-    triggerGlobalErrorBtn
-  ] = errorBtns;
-
-  const throwCustomErrorBtn = document.querySelector('#throw-custom-error');
-
-  throwCustomErrorBtn.addEventListener('click', () => {
-    try {
-      const f = document.querySelector('#first-num').value;
-      const s = document.querySelector('#second-num').value;
-
-      if (isNaN(f) || isNaN(s)) {
-        throw new ValidationError('inputs arent valid nums');
-      }
-
-      console.log('inputs are valid:', { first: f, second: s });
-    } catch (err) {
-      if (err instanceof ValidationError) {
-        console.error('custom ValidationError:', err.message);
-      } else {
-        throw err;
-      }
-    } finally {
-      console.log('finished handling Throw Custom Error');
-    }
-  });
-
-  consoleLogBtn.addEventListener('click', () => {
-    console.log('console.log demo');
-  });
-
-  consoleErrorBtn.addEventListener('click', () => {
-    console.error('console.error demo');
-  });
-
-  consoleCountBtn.addEventListener('click', () => {
-    console.count('console.count demo');
-  });
-
-  consoleWarnBtn.addEventListener('click', () => {
-    console.warn('console.warn demo');
-  });
-
-  consoleAssertBtn.addEventListener('click', () => {
-    const x = 2, y = 3;
-    console.assert(x === y, `console.assert failed: ${x} !== ${y}`);
-  });
-
-  consoleClearBtn.addEventListener('click', () => {
-    console.clear();
-  });
-
-  consoleDirBtn.addEventListener('click', () => {
-    console.dir(document.body);
-  });
-
-  consoleDirxmlBtn.addEventListener('click', () => {
-    console.dirxml(document.querySelector('main'));
-  });
-
-  consoleGroupStartBtn.addEventListener('click', () => {
-    console.group('console group');
-  });
-
-  consoleGroupEndBtn.addEventListener('click', () => {
-    console.groupEnd();
-  });
-
-  consoleTableBtn.addEventListener('click', () => {
-    const ppl = [
-      { id: 1, name: 'p1',   role: 'role1' },
-      { id: 2, name: 'p2',     role: 'role2' },
-    ];
-    console.table(ppl);
-  });
-
-  startTimerBtn.addEventListener('click', () => {
-    console.time('demoTimer');
-    console.log('demoTimer started');
-  });
-
-  endTimerBtn.addEventListener('click', () => {
-    console.timeEnd('demoTimer');
-  });
-
-  consoleTraceBtn.addEventListener('click', () => {
-    function f1() {
-      function f2() {
-        console.trace('stack trace demo');
-      }
-      f2();
-    }
-    f1();
-  });
-
-  triggerGlobalErrorBtn.addEventListener('click', () => {
-    const missing = document.querySelector('#this-element-does-not-exist');
-    console.log(missing.value);
-  });
-  </script>
-
+  <!-- TrackJS snippet -->
+  <script src="https://cdn.trackjs.com/releases/current/tracker.js" data-trackjs-token="de64b8e4765541628745e68603c19f18"></script>
+  <script src="script.js"></script>
 </body>
-
 </html>
