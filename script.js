@@ -1,4 +1,7 @@
-console.log('▶ main script is executing');
+
+
+TrackJS.track('Testing TrackJS!');
+
 
 class ValidationError extends Error {
   constructor(message) {
