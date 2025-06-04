@@ -198,8 +198,6 @@
 
   consoleGroupStartBtn.addEventListener('click', () => {
     console.group('console group');
-    console.log('msg 1');
-    console.log('msg 2');
   });
 
   consoleGroupEndBtn.addEventListener('click', () => {
@@ -224,13 +222,13 @@
   });
 
   consoleTraceBtn.addEventListener('click', () => {
-    function levelOne() {
-      function levelTwo() {
+    function f1() {
+      function f2() {
         console.trace('stack trace demo');
       }
-      levelTwo();
+      f2();
     }
-    levelOne();
+    f1();
   });
 
   triggerGlobalErrorBtn.addEventListener('click', () => {
