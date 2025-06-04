@@ -88,21 +88,157 @@
   </main>
 
   <script>
-    let form = document.querySelector('form');
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
-    });
+    class ValidationError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = 'ValidationError';
+    }
+  }
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+  let form = document.querySelector('form');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    let output = document.querySelector('output');
+    let firstNum = document.querySelector('#first-num').value;
+    let secondNum = document.querySelector('#second-num').value;
+    let operator = document.querySelector('#operator').value;
+    output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+  });
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+  let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+
+  window.onerror = function(message, source, lineno, colno, errorObj) {
+    console.log('Caught global error:', message);
+
+    if (window.trackJs && typeof trackJs.track === 'function') {
+      trackJs.track({
+        message: message,
+        file: source,
+        line: lineno,
+        column: colno,
+        error: errorObj
+      });
+    }
+    return true; 
+  };
+
+  const [
+    consoleLogBtn, 
+    consoleErrorBtn, 
+    consoleCountBtn, 
+    consoleWarnBtn, 
+    consoleAssertBtn,
+    consoleClearBtn,
+    consoleDirBtn, 
+    consoleDirxmlBtn,
+    consoleGroupStartBtn, 
+    consoleGroupEndBtn,
+    consoleTableBtn, 
+    startTimerBtn,
+    endTimerBtn,
+    consoleTraceBtn, 
+    triggerGlobalErrorBtn
+  ] = errorBtns;
+
+  const throwCustomErrorBtn = document.querySelector('#throw-custom-error');
+
+  throwCustomErrorBtn.addEventListener('click', () => {
+    try {
+      const f = document.querySelector('#first-num').value;
+      const s = document.querySelector('#second-num').value;
+
+      if (isNaN(f) || isNaN(s)) {
+        throw new ValidationError('inputs arent valid nums');
+      }
+
+      console.log('inputs are valid:', { first: f, second: s });
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        console.error('custom ValidationError:', err.message);
+      } else {
+        throw err;
+      }
+    } finally {
+      console.log('finished handling Throw Custom Error');
+    }
+  });
+
+  consoleLogBtn.addEventListener('click', () => {
+    console.log('console.log demo');
+  });
+
+  consoleErrorBtn.addEventListener('click', () => {
+    console.error('console.error demo');
+  });
+
+  consoleCountBtn.addEventListener('click', () => {
+    console.count('console.count demo');
+  });
+
+  consoleWarnBtn.addEventListener('click', () => {
+    console.warn('console.warn demo');
+  });
+
+  consoleAssertBtn.addEventListener('click', () => {
+    const x = 2, y = 3;
+    console.assert(x === y, `console.assert failed: ${x} !== ${y}`);
+  });
+
+  consoleClearBtn.addEventListener('click', () => {
+    console.clear();
+  });
+
+  consoleDirBtn.addEventListener('click', () => {
+    console.dir(document.body);
+  });
+
+  consoleDirxmlBtn.addEventListener('click', () => {
+    console.dirxml(document.querySelector('main'));
+  });
+
+  consoleGroupStartBtn.addEventListener('click', () => {
+    console.group('console group');
+    console.log('msg 1');
+    console.log('msg 2');
+  });
+
+  consoleGroupEndBtn.addEventListener('click', () => {
+    console.groupEnd();
+  });
+
+  consoleTableBtn.addEventListener('click', () => {
+    const ppl = [
+      { id: 1, name: 'p1',   role: 'role1' },
+      { id: 2, name: 'p2',     role: 'role2' },
+    ];
+    console.table(ppl);
+  });
+
+  startTimerBtn.addEventListener('click', () => {
+    console.time('demoTimer');
+    console.log('demoTimer started');
+  });
+
+  endTimerBtn.addEventListener('click', () => {
+    console.timeEnd('demoTimer');
+  });
+
+  consoleTraceBtn.addEventListener('click', () => {
+    function levelOne() {
+      function levelTwo() {
+        console.trace('stack trace demo');
+      }
+      levelTwo();
+    }
+    levelOne();
+  });
+
+  triggerGlobalErrorBtn.addEventListener('click', () => {
+    const missing = document.querySelector('#this-element-does-not-exist');
+    console.log(missing.value);
+  });
   </script>
+
 </body>
 
 </html>
