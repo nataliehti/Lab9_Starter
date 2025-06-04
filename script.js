@@ -2,7 +2,7 @@
 
 TrackJS.track('Testing TrackJS!');
 
-
+console.log('hi');
 class ValidationError extends Error {
   constructor(message) {
     super(message);
